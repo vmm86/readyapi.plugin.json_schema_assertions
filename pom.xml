@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.vmm86.readyapi.plugin</groupId>
+    <artifactId>json_schema_assertions</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <readyapi.version>2.8.2</readyapi.version>
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+        <maven.assembly.plugin.version>3.1.1</maven.assembly.plugin.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Maven2 Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>smartbear-software</id>
+            <url>http://smartbearsoftware.com/repository/maven2</url>
+        </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.smartbear</groupId>
+            <artifactId>ready-api-core</artifactId>
+            <version>${readyapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartbear</groupId>
+            <artifactId>ready-api-projects</artifactId>
+            <version>${readyapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartbear</groupId>
+            <artifactId>ready-api-soapui-pro</artifactId>
+            <version>${readyapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartbear</groupId>
+            <artifactId>readyapi-assertions-packaged</artifactId>
+            <version>${readyapi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>2.3.16</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.everit-org.json-schema</groupId>
+            <artifactId>org.everit.json.schema</artifactId>
+            <version>1.11.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>${maven.jar.plugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>${maven.assembly.plugin.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Workaround not to create the default *.jar file without dependencies -->
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven.assembly.plugin.version}</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>${project.basedir}/src/assembly/dist-assembly.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <defaultGoal>clean install</defaultGoal>
+    </build>
+</project>
