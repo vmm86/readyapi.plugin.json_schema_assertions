@@ -7,62 +7,72 @@ import com.eviware.soapui.impl.wsdl.submit.HttpMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
-import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionException;
+import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.plugins.auto.PluginTestAssertion;
 import com.eviware.soapui.support.JsonUtil;
-import org.json.JSONObject;
 
 @PluginTestAssertion(
     id = "JsonSchemaResponseAssertion",
     label = "Json Schema Response Assertion",
     category = AssertionCategoryMapping.STATUS_CATEGORY,
-    description = "Validate response message JSON body with a given JSON Schema"
+    description = "Validate response JSON with a given JSON Schema (drafts 4 to 7 supported)"
 )
-public class JsonSchemaResponseAssertion extends JsonSchemaBaseAssertion implements ResponseAssertion {
+public class JsonSchemaResponseAssertion extends JsonSchemaAssertion implements RequestAssertion, ResponseAssertion {
     public JsonSchemaResponseAssertion(TestAssertionConfig assertionConfig, Assertable modelItem) {
         super(
             assertionConfig, modelItem,
-            true, false, false, true,
-            JsonSchemaResponseAssertion.class
+            true, false, false, true
         );
         ID = "JsonSchemaResponseAssertion";
         LABEL = "Json Schema Response Assertion";
-        DESCRIPTION = "Validate response message JSON body with a given JSON Schema";
+        DESCRIPTION = "Validate response JSON with a given JSON Schema (drafts 4 to 7 supported)";
         ORDER = 41;
     }
 
-    JSONObject getJsonObject(HttpMessageExchange messageExchange) {
-        JSONObject jsonObject = new JSONObject(messageExchange.getResponseContent());
-        return jsonObject.optJSONObject("result");
+    String getJsonObjectString(HttpMessageExchange messageExchange) {
+        return messageExchange.getResponseContent();
     }
 
     boolean ifMessageIsSuitableForAssertion(MessageExchange messageExchange) {
         return messageExchange != null && messageExchange.hasResponse();
     }
 
+    protected String internalAssertRequest(
+        MessageExchange messageExchange,
+        PropertyExpansionContext context
+    ) throws AssertionException {
+//        log.debug("Response -> internalAssertRequest");
+        return null;
+    }
+
+    public Assertable.AssertionStatus assertRequest(
+        MessageExchange messageExchange,
+        PropertyExpansionContext context
+    ) {
+//        log.debug("Response -> assertRequest");
+        return null;
+    }
+
     protected String internalAssertResponse(
         MessageExchange messageExchange,
         SubmitContext context
     ) throws AssertionException {
+//        log.debug("Response -> internalAssertResponse");
         return internalAssert(messageExchange);
     }
 
-//    public AssertionStatus assertResponse(MessageExchange messageExchange, SubmitContext context) {
-//        return super.assertResponse(messageExchange, context);
-//    }
-
-    protected String internalAssertProperty(
-        TestPropertyHolder source,
-        String propertyName,
+    public Assertable.AssertionStatus assertResponse(
         MessageExchange messageExchange,
         SubmitContext context
-    ) throws AssertionException {
-        return null;
+    ) {
+//        log.debug("Response -> assertResponse");
+        return super.assertResponse(messageExchange, context);
     }
 
     public static class Factory extends AbstractTestAssertionFactory {
@@ -94,7 +104,7 @@ public class JsonSchemaResponseAssertion extends JsonSchemaBaseAssertion impleme
                 String assertionClassName = getClass().getSimpleName();
                 String assertableClassName = assertable.getClass().getSimpleName();
                 log.trace(
-                        assertionClassName + " assertion is not applicable for " + assertableClassName, te
+                    assertionClassName + " assertion is not applicable for " + assertableClassName, te
                 );
                 return false;
             }

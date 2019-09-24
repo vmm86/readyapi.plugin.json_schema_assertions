@@ -6,7 +6,7 @@ import com.eviware.soapui.plugins.PluginConfiguration;
 @PluginConfiguration(
     groupId = "com.github.vmm86.readyapi.plugin",
     name = "JSON Schema Assertions Plugin",
-    description = "ReadyAPI plugin to validate request or response body with the given JSON schema",
+    description = "Validate request or response JSON with a given JSON schema (drafts 4 to 7 supported)",
     version = "1.0.0",
     infoUrl = "https://github.com/vmm86/readyapi.plugin.json_schema_assertions"
 )
